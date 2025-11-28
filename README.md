@@ -19,7 +19,7 @@ Reference
 
 1. record all owned game and character information
 2. games are categorized by name
-3. characters are catagorized by position, camp and so on 
+3. characters are catagorized and ordered by sex, position, region and quality
 4. support basic CRUD operations
 5. frequent addition of elements and adjustment of element order
 6. =v=
@@ -37,6 +37,17 @@ repository
 dto
 
 ## log
+
+[2025-11-29]
+
+Added
+
+- add domain Character
+- add dto getter
+
+changed
+
+- modify function description
 
 [2025-11-28]
 
