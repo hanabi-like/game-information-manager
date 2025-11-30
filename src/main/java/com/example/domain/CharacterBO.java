@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Comparator;
-import com.example.dto.*;
+import com.example.domain.entity.*;
 
-public class Character {
+public class CharacterBO {
 
-    private List<CharacterInformationDTO> characterInformations;
+    private List<GameCharacter> characterInformations;
 
     /* Genshin Impact */
     private static final Map<String, Integer> REGION_ORDER_GENSHIN_IMPACT = Map.of(
@@ -21,11 +21,11 @@ public class Character {
             "Fontaine", 6,
             "Natlan", 7);
 
-    public Character() {
+    public CharacterBO() {
         this.characterInformations = new ArrayList<>();
     }
 
-    public Character(List<CharacterInformationDTO> characterInformationsFromRepo) {
+    public CharacterBO(List<GameCharacter> characterInformationsFromRepo) {
         if (characterInformationsFromRepo == null) {
             this.characterInformations = new ArrayList<>();
         }
@@ -35,10 +35,10 @@ public class Character {
     public void sortCharacterInformations(String gameName) {
         switch (gameName) {
             case "Genshin Impact":
-                Comparator<CharacterInformationDTO> comparator = Comparator
+                Comparator<GameCharacter> comparator = Comparator
                         .comparing(
-                                (CharacterInformationDTO c) -> REGION_ORDER_GENSHIN_IMPACT.get(c.getCharacterRegion()))
-                        .thenComparing(CharacterInformationDTO::getCharacterQuality, Comparator.reverseOrder());
+                                (GameCharacter c) -> REGION_ORDER_GENSHIN_IMPACT.get(c.getCharacterRegion()))
+                        .thenComparing(GameCharacter::getCharacterQuality, Comparator.reverseOrder());
                 this.characterInformations.sort(comparator);
                 break;
             default:
@@ -46,7 +46,7 @@ public class Character {
         }
     }
 
-    public List<CharacterInformationDTO> getCharacterInformations() {
+    public List<GameCharacter> getCharacterInformations() {
         return this.characterInformations;
     }
 }

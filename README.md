@@ -9,6 +9,7 @@ Cogito, ergo sum.[1]
 Transportation was proposed as a mechanism whereby narratives can affect beliefs. Defined as absorption into a story, transportation entails imagery, affect, and attentional focus.
 We conceptualized transportation into a narrative world as a distinct mental process, an integrative melding of attention, imagery, and feelings.[2]
 ```
+
 ```
 Reference
 [1]Descartes, R. (1641). Meditationes de prima philosophia.
@@ -26,24 +27,38 @@ Reference
 
 ## architecture
 
-controller
-
-service
-
-domain
-
-repository
-
-dto
+```
+controller/
+service/
+domain/
+    -entity/
+repository/
+dto/
+```
 
 ## log
+
+[2025-11-30]
+
+Added
+
+- add test/domain/ CharacterBOTest
+- add domain/entity/ Game GameCharacter
+
+Changed
+
+- modify domain/ CharacterBO
+
+Fixed
+
+- fix dto/ details
 
 [2025-11-29]
 
 Added
 
-- add domain Character
-- add dto getter
+- add domain/ Character
+- add dto/ getter
 
 changed
 
@@ -53,7 +68,7 @@ changed
 
 Added
 
-- add dto
+- add dto/
 - add introduction
 
 changed
