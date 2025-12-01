@@ -38,6 +38,12 @@ dto/
 
 ## log
 
+[2025-12-01]
+
+Added
+
+- add repository CharacterRepository interface
+
 [2025-11-30]
 
 Added
