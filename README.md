@@ -38,11 +38,21 @@ dto/
 
 ## log
 
+[2025-12-03]
+
+Added
+
+- add service/ CharacterService
+
+Changed
+
+- modify dto/ CharacterInformationDTO and pom.xml
+
 [2025-12-01]
 
 Added
 
-- add repository CharacterRepository interface
+- add repository/ CharacterRepository interface
 
 [2025-11-30]
 
