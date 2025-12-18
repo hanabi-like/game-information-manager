@@ -9,6 +9,26 @@ public class CharacterInformationDTO {
     private String characterRegion;
     private String characterQuality;
 
+    public String getCharacterName() {
+        return this.characterName;
+    }
+
+    public int getCharacterSex() {
+        return this.characterSex;
+    }
+
+    public String getCharacterPosition() {
+        return this.characterPosition;
+    }
+
+    public String getCharacterRegion() {
+        return this.characterRegion;
+    }
+
+    public String getCharacterQuality() {
+        return this.characterQuality;
+    }
+
     public static CharacterInformationDTO fromEntity(GameCharacter gameCharacter) {
         CharacterInformationDTO characterInformationDTO = new CharacterInformationDTO();
         characterInformationDTO.characterName = gameCharacter.getCharacterName();

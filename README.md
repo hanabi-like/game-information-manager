@@ -38,6 +38,16 @@ dto/
 
 ## log
 
+[2025-12-18]
+
+Added
+
+- add test/service/ CharacterServiceTest
+
+Changed
+
+- modify dto/ CharacterInformationDTO
+
 [2025-12-03]
 
 Added
