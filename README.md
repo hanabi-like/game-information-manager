@@ -38,6 +38,12 @@ dto/
 
 ## log
 
+[2026-01-12]
+
+Changed
+
+- split methods in service/
+
 [2025-12-18]
 
 Added

@@ -15,13 +15,28 @@ import com.example.domain.entity.GameCharacter;
 public class CharacterService {
     private final CharacterRepository characterRepository;
 
-    public List<CharacterInformationDTO> sortCharacterInformations(String gameName) {
+    private CharacterBO getCharacterBO() {
         List<GameCharacter> characterInformationsFromRepo = this.characterRepository.findAll();
         CharacterBO characterBo = new CharacterBO(characterInformationsFromRepo);
+        return characterBo;
+    }
+
+    private List<GameCharacter> sortCharacterInformations(CharacterBO characterBo, String gameName) {
         characterBo.sortCharacterInformations(gameName);
         List<GameCharacter> sortedCharacterInformations = characterBo.getCharacterInformations();
+        return sortedCharacterInformations;
+    }
+
+    private List<CharacterInformationDTO> getCharacterInformationDTO(List<GameCharacter> sortedCharacterInformations) {
         List<CharacterInformationDTO> characterInformationDTO = sortedCharacterInformations.stream()
                 .map(CharacterInformationDTO::fromEntity).toList();
+        return characterInformationDTO;
+    }
+
+    public List<CharacterInformationDTO> getSortedCharacterInformations(String gameName) {
+        CharacterBO characterBo = getCharacterBO();
+        List<GameCharacter> sortedCharacterInformations = sortCharacterInformations(characterBo, gameName);
+        List<CharacterInformationDTO> characterInformationDTO = getCharacterInformationDTO(sortedCharacterInformations);
         return characterInformationDTO;
     }
 }

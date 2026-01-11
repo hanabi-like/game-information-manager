@@ -45,7 +45,7 @@ public class CharacterServiceTest {
         List<GameCharacter> input = new ArrayList<>(expected);
         Collections.shuffle(input);
         when(this.characterRepository.findAll()).thenReturn(input);
-        List<CharacterInformationDTO> actual = characterService.sortCharacterInformations("Genshin Impact");
+        List<CharacterInformationDTO> actual = characterService.getSortedCharacterInformations("Genshin Impact");
         for (int i = 0; i < expected.size(); ++i) {
             assertEquals(expected.get(i).getCharacterName(), actual.get(i).getCharacterName());
         }
