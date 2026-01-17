@@ -38,6 +38,13 @@ dto/
 
 ## log
 
+[2026-01-17]
+
+Changed
+
+- add order in domain/entity/ GameCharacter and dto/ CharacterInformationDTO
+- modify test/domain/ CharacterBOTest and test/service/ CharacterServiceTest
+
 [2026-01-12]
 
 Changed

@@ -2,6 +2,7 @@ package com.example.domain.entity;
 
 public class GameCharacter {
     private int characterId;
+    private Integer characterOrder;
     private String characterName;
     private int characterSex;
     private String characterPosition;
@@ -11,8 +12,9 @@ public class GameCharacter {
     public GameCharacter() {
     }
 
-    public GameCharacter(int id, String name, int sex, String position, String region, String quality) {
+    public GameCharacter(int id, Integer order, String name, int sex, String position, String region, String quality) {
         this.characterId = id;
+        this.characterOrder = order;
         this.characterName = name;
         this.characterSex = sex;
         this.characterPosition = position;
@@ -22,6 +24,10 @@ public class GameCharacter {
 
     public int getCharacterId() {
         return this.characterId;
+    }
+
+    public Integer getCharacterOrder() {
+        return this.characterOrder;
     }
 
     public String getCharacterName() {
