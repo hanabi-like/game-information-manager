@@ -31,12 +31,19 @@ Reference
 controller/
 service/
 domain/
-    -entity/
 repository/
+    -entity/
+    -impl/
 dto/
 ```
 
 ## log
+
+[2026-01-21]
+
+Changed
+
+- optimize repository/ on branch repository
 
 [2026-01-17]
 
