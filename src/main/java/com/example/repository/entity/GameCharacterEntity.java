@@ -1,20 +1,40 @@
 package com.example.repository.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.redis.core.RedisHash;
-import org.springframework.data.annotation.Id;
+import lombok.NoArgsConstructor;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import java.time.LocalDateTime;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @RedisHash("gamecharacter")
 public class GameCharacterEntity {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(nullable = false)
     private Integer order;
     @Id
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private Integer sex;
+    @Column(nullable = false)
     private String region;
-    private String quality;
+    @Column(nullable = false)
+    private Integer quality;
+    @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createTime;
+    @UpdateTimestamp
     private LocalDateTime updateTime;
 }

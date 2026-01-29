@@ -39,6 +39,16 @@ dto/
 
 ## log
 
+[2026-01-30]
+
+Added
+
+- add test/repository/ GameCharacterRepositoryTest
+
+Changed
+
+- optimize repository/entity/ GameCharacterEntity
+
 [2026-01-21]
 
 Changed
