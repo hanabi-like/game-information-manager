@@ -16,7 +16,7 @@ import org.springframework.data.redis.core.ScanOptions;
 @RequiredArgsConstructor
 public class GameCharacterRepositoryImpl implements GameCharacterRepository {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, GameCharacterEntity> redisTemplate;
 
     private static final String KEY_PREFIX = "gamecharacter:";
 

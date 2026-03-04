@@ -39,6 +39,12 @@ dto/
 
 ## log
 
+[2026-03-05]
+
+fixed
+
+- adapt @DataRedisTest
+
 [2026-01-30]
 
 Added

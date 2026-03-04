@@ -5,6 +5,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -13,9 +20,35 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.example.repository.entity.GameCharacterEntity;
+import com.example.repository.impl.GameCharacterRepositoryImpl;
 
 @DataRedisTest
+@ContextConfiguration(classes = GameCharacterRepositoryTest.Config.class)
 public class GameCharacterRepositoryTest {
+
+    @TestConfiguration
+    static class Config {
+
+        @Bean
+        public LettuceConnectionFactory redisConnectionFactory() {
+            return new LettuceConnectionFactory("127.0.0.1", 6379);
+        }
+
+        @Bean
+        public RedisTemplate<String, GameCharacterEntity> redisTemplate() {
+            RedisTemplate<String, GameCharacterEntity> template = new RedisTemplate<>();
+            template.setConnectionFactory(redisConnectionFactory());
+            template.setKeySerializer(new StringRedisSerializer());
+            template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+            return template;
+        }
+
+        @Bean
+        public GameCharacterRepository gameCharacterRepository(
+                RedisTemplate<String, GameCharacterEntity> redisTemplate) {
+            return new GameCharacterRepositoryImpl(redisTemplate);
+        }
+    }
 
     @Autowired
     private GameCharacterRepository gameCharacterRepository;
