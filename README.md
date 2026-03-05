@@ -20,7 +20,7 @@ Reference
 
 1. record all owned game and character information
 2. games are categorized by name
-3. characters are catagorized and ordered by sex, position, region and quality
+3. characters are catagorized and ordered by sex, region and quality
 4. support basic CRUD operations
 5. frequent addition of elements and adjustment of element order
 6. =v=
@@ -31,6 +31,8 @@ Reference
 controller/
 service/
 domain/
+    -model/
+    -util/
 repository/
     -entity/
     -impl/
@@ -41,7 +43,13 @@ dto/
 
 [2026-03-05]
 
-fixed
+Changed
+
+- change domain/ structure
+
+[2026-03-05]
+
+Fixed
 
 - adapt @DataRedisTest
 
@@ -122,7 +130,7 @@ Added
 - add domain/ Character
 - add dto/ getter
 
-changed
+Changed
 
 - modify function description
 
@@ -133,7 +141,7 @@ Added
 - add dto/
 - add introduction
 
-changed
+Changed
 
 - adjust architecture
 
