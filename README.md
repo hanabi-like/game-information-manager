@@ -31,12 +31,35 @@ Reference
 controller/
 service/
 domain/
-    -entity/
 repository/
+    -entity/
+    -impl/
 dto/
 ```
 
 ## log
+
+[2026-03-05]
+
+fixed
+
+- adapt @DataRedisTest
+
+[2026-01-30]
+
+Added
+
+- add test/repository/ GameCharacterRepositoryTest
+
+Changed
+
+- optimize repository/entity/ GameCharacterEntity
+
+[2026-01-21]
+
+Changed
+
+- optimize repository/ on branch repository
 
 [2026-01-17]
 
