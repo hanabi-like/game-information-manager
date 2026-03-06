@@ -11,13 +11,11 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@RedisHash("gamecharacter")
 public class GameCharacterEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
