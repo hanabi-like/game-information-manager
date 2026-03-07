@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Repository
 @RequiredArgsConstructor
 public class GameRepositoryImpl implements GameRepository {
-    private static final String KEY_PREFIX = "game" + ":";
+    private static final String KEY_PREFIX = "game";
 
     private final RedisTemplate<String, String> redisTemplate;
 
