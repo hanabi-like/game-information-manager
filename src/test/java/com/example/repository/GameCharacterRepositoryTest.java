@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import com.example.domain.model.GameCharacter;
 import com.example.repository.entity.GameCharacterEntity;
 import com.example.repository.impl.GameCharacterRepositoryImpl;
 
@@ -53,18 +54,19 @@ public class GameCharacterRepositoryTest {
     @Autowired
     private GameCharacterRepository gameCharacterRepository;
 
-    private List<GameCharacterEntity> input;
+    private String inputGameName = "Genshin Impact";
+    private List<GameCharacter> input;
 
     @BeforeEach
     void setup() {
         input = Arrays.asList(
-                GameCharacterEntity.builder().order(4).name("a").sex(0).region("region0").quality(5).build(),
-                GameCharacterEntity.builder().order(3).name("b").sex(1).region("region1").quality(4).build(),
-                GameCharacterEntity.builder().order(2).name("c").sex(0).region("region2").quality(5).build(),
-                GameCharacterEntity.builder().order(1).name("d").sex(1).region("region3").quality(4).build(),
-                GameCharacterEntity.builder().order(0).name("e").sex(0).region("region4").quality(5).build());
+                GameCharacter.builder().order(4).name("a").sex(0).region("region0").quality(5).build(),
+                GameCharacter.builder().order(3).name("b").sex(1).region("region1").quality(4).build(),
+                GameCharacter.builder().order(2).name("c").sex(0).region("region2").quality(5).build(),
+                GameCharacter.builder().order(1).name("d").sex(1).region("region3").quality(4).build(),
+                GameCharacter.builder().order(0).name("e").sex(0).region("region4").quality(5).build());
         for (int i = 0; i < input.size(); ++i) {
-            gameCharacterRepository.save(input.get(i));
+            gameCharacterRepository.save(inputGameName, input.get(i));
         }
     }
 
@@ -72,32 +74,29 @@ public class GameCharacterRepositoryTest {
     void cleanup() {
         for (int i = 0; i < input.size(); ++i) {
             String name = input.get(i).getName();
-            gameCharacterRepository.deleteByName(name);
+            gameCharacterRepository.delete(inputGameName, name);
         }
     }
 
     @Test
     public void shouldAsExpectationWhenExecuteCRUD() {
-        List<GameCharacterEntity> gameCharacterEntityList = gameCharacterRepository.findAll();
-        for (int i = 0; i < gameCharacterEntityList.size(); ++i) {
-            Integer id = gameCharacterEntityList.get(i).getId();
-            Integer order = gameCharacterEntityList.get(i).getOrder();
-            String name = gameCharacterEntityList.get(i).getName();
-            Integer sex = gameCharacterEntityList.get(i).getSex();
-            String region = gameCharacterEntityList.get(i).getRegion();
-            Integer quality = gameCharacterEntityList.get(i).getQuality();
-            LocalDateTime createTime = gameCharacterEntityList.get(i).getCreateTime();
-            LocalDateTime updateTime = gameCharacterEntityList.get(i).getUpdateTime();
-            System.out.println("id: " + id + " order: " + order + " name: " + name + " sex: " + sex + " region: "
-                    + region + " quality: " + quality + " createTime: " + createTime + " updateTime: " + updateTime);
+        List<GameCharacter> gameCharacterList = gameCharacterRepository.findAll(inputGameName);
+        for (int i = 0; i < gameCharacterList.size(); ++i) {
+            Integer order = gameCharacterList.get(i).getOrder();
+            String name = gameCharacterList.get(i).getName();
+            Integer sex = gameCharacterList.get(i).getSex();
+            String region = gameCharacterList.get(i).getRegion();
+            Integer quality = gameCharacterList.get(i).getQuality();
+            System.out.println(" order: " + order + " name: " + name + " sex: " + sex + " region: "
+                    + region + " quality: " + quality);
         }
-        for (GameCharacterEntity i : input) {
-            GameCharacterEntity gameCharacterEntity = gameCharacterRepository.findByName(i.getName()).get();
-            assertEquals(i.getOrder(), gameCharacterEntity.getOrder());
-            assertEquals(i.getName(), gameCharacterEntity.getName());
-            assertEquals(i.getSex(), gameCharacterEntity.getSex());
-            assertEquals(i.getRegion(), gameCharacterEntity.getRegion());
-            assertEquals(i.getQuality(), gameCharacterEntity.getQuality());
+        for (GameCharacter i : input) {
+            GameCharacter gameCharacter = gameCharacterRepository.find(inputGameName, i.getName()).get();
+            assertEquals(i.getOrder(), gameCharacter.getOrder());
+            assertEquals(i.getName(), gameCharacter.getName());
+            assertEquals(i.getSex(), gameCharacter.getSex());
+            assertEquals(i.getRegion(), gameCharacter.getRegion());
+            assertEquals(i.getQuality(), gameCharacter.getQuality());
         }
     }
 }

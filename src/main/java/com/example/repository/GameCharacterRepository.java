@@ -2,17 +2,18 @@ package com.example.repository;
 
 import java.util.List;
 import java.util.Optional;
-
-import com.example.repository.entity.GameCharacterEntity;
+import com.example.domain.model.GameCharacter;
 
 public interface GameCharacterRepository {
-    List<GameCharacterEntity> findAll();
+    boolean exist(String gameName, String name);
 
-    void save(GameCharacterEntity gameCharacterEntity);
+    void save(String gameName, GameCharacter gameCharacter);
 
-    boolean existByName(String name);
+    List<GameCharacter> findAll(String gameName);
 
-    Optional<GameCharacterEntity> findByName(String name);
+    Optional<GameCharacter> find(String gameName, String name);
 
-    void deleteByName(String name);
+    void delete(String gameName, String name);
+
+    void update(String gameName, GameCharacter gameCharacter);
 }
