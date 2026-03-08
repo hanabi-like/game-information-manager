@@ -93,7 +93,14 @@ public class GameCharacterService {
         List<GameCharacter> gameCharacterListFromRepo = gameCharacterRepository.findAll(gameName);
         List<GameCharacter> gameCharacterList = gameCharacterDomain.sortSpecificGameCharacter(gameName,
                 gameCharacterListFromRepo);
-        return toBO(gameName, gameCharacterList);
+        return toResponseBO(gameName, gameCharacterList);
+    }
+
+    public GameCharacterRegionResponseBO displaySpecificGameCharacterByRegion(String gameName, String region) {
+        List<GameCharacter> gameCharacterListFromRepo = gameCharacterRepository.findAll(gameName);
+        List<GameCharacter> gameCharacterList = gameCharacterDomain.sortSpecificGameCharacterByRegion(region,
+                gameCharacterListFromRepo);
+        return toRegionResponseBO(gameName, region, gameCharacterList);
     }
 
     private GameCharacter toDomain(GameCharacterRequestBO gameCharacterRequestBO) {
@@ -103,7 +110,7 @@ public class GameCharacterService {
                 .build();
     }
 
-    private GameCharacterResponseBO toBO(String gameName, List<GameCharacter> gameCharacterList) {
+    private GameCharacterResponseBO toResponseBO(String gameName, List<GameCharacter> gameCharacterList) {
         Map<String, List<GameCharacter>> regionMap = gameCharacterList.stream()
                 .collect(Collectors.groupingBy(GameCharacter::getRegion, LinkedHashMap::new, Collectors.toList()));
         List<GameCharacterRegionResponseBO> gameCharacterRegionResponseBOList = regionMap.entrySet().stream()
@@ -112,6 +119,17 @@ public class GameCharacterService {
                 .toList();
         return GameCharacterResponseBO.builder().gameName(gameName)
                 .gameCharacterRegionResponseBOList(gameCharacterRegionResponseBOList)
+                .build();
+    }
+
+    private GameCharacterRegionResponseBO toRegionResponseBO(String gameName, String region,
+            List<GameCharacter> gameCharacterList) {
+        List<String> nameList = gameCharacterList.stream()
+                .map(GameCharacter::getName)
+                .toList();
+        return GameCharacterRegionResponseBO.builder()
+                .region(region)
+                .nameList(nameList)
                 .build();
     }
 }
