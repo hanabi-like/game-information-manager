@@ -1,7 +1,5 @@
 package com.example.service.bo;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RegionGameCharacterBO {
+public class GameCharacterRequestBO {
+    private String gameName;
+    private Integer order;
+    private String name;
+    private Integer sex;
     private String region;
-    private List<String> nameList;
+    private Integer quality;
 }

@@ -11,9 +11,9 @@ import com.example.repository.GameRepository;
 import com.example.repository.GameCharacterRepository;
 import com.example.domain.GameCharacterDomain;
 import com.example.domain.model.GameCharacter;
-import com.example.service.bo.GameCharacterBO;
-import com.example.service.bo.GameCharacterOverviewBO;
-import com.example.service.bo.RegionGameCharacterBO;
+import com.example.service.bo.GameCharacterRequestBO;
+import com.example.service.bo.GameCharacterResponseBO;
+import com.example.service.bo.GameCharacterRegionResponseBO;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +22,8 @@ public class GameCharacterService {
     private final GameCharacterRepository gameCharacterRepository;
     private final GameCharacterDomain gameCharacterDomain = new GameCharacterDomain();
 
-    public void saveGameCharacter(String gameName, GameCharacterBO gameCharacterBO) {
-        GameCharacter gameCharacter = toDomain(gameCharacterBO);
+    public void saveGameCharacter(String gameName, GameCharacterRequestBO gameCharacterRequestBO) {
+        GameCharacter gameCharacter = toDomain(gameCharacterRequestBO);
         if (!gameRepository.existGame(gameName)) {
             gameRepository.saveGame(gameName);
             gameCharacterRepository.save(gameName, gameCharacter);
@@ -52,10 +52,10 @@ public class GameCharacterService {
         return;
     }
 
-    public void updateGameCharacter(String gameName, GameCharacterBO oldGameCharacterBO,
-            GameCharacterBO newGameCharacterBO) {
-        GameCharacter oldGameCharacter = toDomain(oldGameCharacterBO);
-        GameCharacter newGameCharacter = toDomain(newGameCharacterBO);
+    public void updateGameCharacter(String gameName, GameCharacterRequestBO oldGameCharacterRequestBO,
+            GameCharacterRequestBO newGameCharacterRequestBO) {
+        GameCharacter oldGameCharacter = toDomain(oldGameCharacterRequestBO);
+        GameCharacter newGameCharacter = toDomain(newGameCharacterRequestBO);
         if (!gameRepository.existGame(gameName)
                 || !gameCharacterRepository.exist(gameName, oldGameCharacter.getName())) {
             System.out.println("not exist");
@@ -78,8 +78,8 @@ public class GameCharacterService {
         return;
     }
 
-    public void deleteGameCharacter(String gameName, GameCharacterBO gameCharacterBO) {
-        GameCharacter gameCharacter = toDomain(gameCharacterBO);
+    public void deleteGameCharacter(String gameName, GameCharacterRequestBO gameCharacterRequestBO) {
+        GameCharacter gameCharacter = toDomain(gameCharacterRequestBO);
         if (!gameRepository.existGame(gameName)
                 || !gameCharacterRepository.exist(gameName, gameCharacter.getName())) {
             System.out.println("not exist");
@@ -89,27 +89,29 @@ public class GameCharacterService {
         return;
     }
 
-    public GameCharacterOverviewBO displaySpecificGameCharacter(String gameName) {
+    public GameCharacterResponseBO displaySpecificGameCharacter(String gameName) {
         List<GameCharacter> gameCharacterListFromRepo = gameCharacterRepository.findAll(gameName);
         List<GameCharacter> gameCharacterList = gameCharacterDomain.sortSpecificGameCharacter(gameName,
                 gameCharacterListFromRepo);
         return toBO(gameName, gameCharacterList);
     }
 
-    private GameCharacter toDomain(GameCharacterBO gameCharacterBO) {
-        return GameCharacter.builder().order(gameCharacterBO.getOrder()).name(gameCharacterBO.getName())
-                .sex(gameCharacterBO.getSex()).region(gameCharacterBO.getRegion()).quality(gameCharacterBO.getQuality())
+    private GameCharacter toDomain(GameCharacterRequestBO gameCharacterRequestBO) {
+        return GameCharacter.builder().order(gameCharacterRequestBO.getOrder()).name(gameCharacterRequestBO.getName())
+                .sex(gameCharacterRequestBO.getSex()).region(gameCharacterRequestBO.getRegion())
+                .quality(gameCharacterRequestBO.getQuality())
                 .build();
     }
 
-    private GameCharacterOverviewBO toBO(String gameName, List<GameCharacter> gameCharacterList) {
+    private GameCharacterResponseBO toBO(String gameName, List<GameCharacter> gameCharacterList) {
         Map<String, List<GameCharacter>> regionMap = gameCharacterList.stream()
                 .collect(Collectors.groupingBy(GameCharacter::getRegion, LinkedHashMap::new, Collectors.toList()));
-        List<RegionGameCharacterBO> regionGameCharacterBOList = regionMap.entrySet().stream()
-                .map(entry -> RegionGameCharacterBO.builder().region(entry.getKey())
+        List<GameCharacterRegionResponseBO> gameCharacterRegionResponseBOList = regionMap.entrySet().stream()
+                .map(entry -> GameCharacterRegionResponseBO.builder().region(entry.getKey())
                         .nameList(entry.getValue().stream().map(GameCharacter::getName).toList()).build())
                 .toList();
-        return GameCharacterOverviewBO.builder().gameName(gameName).regionGameCharacterBOList(regionGameCharacterBOList)
+        return GameCharacterResponseBO.builder().gameName(gameName)
+                .gameCharacterRegionResponseBOList(gameCharacterRegionResponseBOList)
                 .build();
     }
 }

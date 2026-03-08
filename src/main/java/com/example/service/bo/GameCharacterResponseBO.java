@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GameCharacterOverviewBO {
+public class GameCharacterResponseBO {
     private String gameName;
-    private List<RegionGameCharacterBO> regionGameCharacterBOList;
+    private List<GameCharacterRegionResponseBO> gameCharacterRegionResponseBOList;
 }

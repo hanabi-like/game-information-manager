@@ -7,8 +7,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.example.domain.model.GameCharacter;
 import com.example.repository.GameCharacterRepository;
 import com.example.repository.GameRepository;
-import com.example.service.bo.GameCharacterOverviewBO;
-import com.example.service.bo.RegionGameCharacterBO;
+import com.example.service.bo.GameCharacterResponseBO;
+import com.example.service.bo.GameCharacterRegionResponseBO;
 
 import org.mockito.Mock;
 import org.mockito.InjectMocks;
@@ -38,29 +38,29 @@ public class GameCharacterServiceTest {
                         GameCharacter.builder().order(0).name("爱可菲").sex(0).region("Fontaine").quality(5).build(),
                         GameCharacter.builder().order(1).name("夏沃蕾").sex(0).region("Fontaine").quality(4).build(),
                         GameCharacter.builder().order(0).name("玛拉妮").sex(0).region("Natlan").quality(5).build());
-        private GameCharacterOverviewBO expectedGenshinImpactOverviewBO = GameCharacterOverviewBO.builder()
+        private GameCharacterResponseBO expectedGenshinImpactResponseBO = GameCharacterResponseBO.builder()
                         .gameName("Genshin Impact")
-                        .regionGameCharacterBOList(
+                        .gameCharacterRegionResponseBOList(
                                         Arrays.asList(
-                                                        RegionGameCharacterBO.builder().region("Genshin")
+                                                        GameCharacterRegionResponseBO.builder().region("Genshin")
                                                                         .nameList(Arrays.asList("荧")).build(),
-                                                        RegionGameCharacterBO.builder().region("God")
+                                                        GameCharacterRegionResponseBO.builder().region("God")
                                                                         .nameList(Arrays.asList("温迪")).build(),
-                                                        RegionGameCharacterBO.builder().region("Mondstadt")
+                                                        GameCharacterRegionResponseBO.builder().region("Mondstadt")
                                                                         .nameList(Arrays.asList("杜林", "班尼特"))
                                                                         .build(),
-                                                        RegionGameCharacterBO.builder().region("Liyue")
+                                                        GameCharacterRegionResponseBO.builder().region("Liyue")
                                                                         .nameList(Arrays.asList("胡桃", "行秋")).build(),
-                                                        RegionGameCharacterBO.builder().region("Inazuma")
+                                                        GameCharacterRegionResponseBO.builder().region("Inazuma")
                                                                         .nameList(Arrays.asList("宵宫", "久岐忍"))
                                                                         .build(),
-                                                        RegionGameCharacterBO.builder().region("Sumeru")
+                                                        GameCharacterRegionResponseBO.builder().region("Sumeru")
                                                                         .nameList(Arrays.asList("妮露", "珐露珊"))
                                                                         .build(),
-                                                        RegionGameCharacterBO.builder().region("Fontaine")
+                                                        GameCharacterRegionResponseBO.builder().region("Fontaine")
                                                                         .nameList(Arrays.asList("爱可菲", "夏沃蕾"))
                                                                         .build(),
-                                                        RegionGameCharacterBO.builder().region("Natlan")
+                                                        GameCharacterRegionResponseBO.builder().region("Natlan")
                                                                         .nameList(Arrays.asList("玛拉妮")).build()))
                         .build();
         @Mock
@@ -81,17 +81,18 @@ public class GameCharacterServiceTest {
                                                         expectedGenshinImpactGameCharacterList);
                                         Collections.shuffle(input);
                                         when(this.gameCharacterRepository.findAll(gameName)).thenReturn(input);
-                                        GameCharacterOverviewBO actual = gameCharacterService
+                                        GameCharacterResponseBO actual = gameCharacterService
                                                         .displaySpecificGameCharacter(gameName);
                                         assertEquals(actual.getGameName(),
-                                                        expectedGenshinImpactOverviewBO.getGameName());
+                                                        expectedGenshinImpactResponseBO.getGameName());
                                         /*
                                          * System.out.println(actual.getGameName() + " vs "
-                                         * + expectedGenshinImpactOverviewBO.getGameName());
+                                         * + expectedGenshinImpactResponseBO.getGameName());
                                          */
-                                        List<RegionGameCharacterBO> actuaclList = actual.getRegionGameCharacterBOList();
-                                        List<RegionGameCharacterBO> expectedList = expectedGenshinImpactOverviewBO
-                                                        .getRegionGameCharacterBOList();
+                                        List<GameCharacterRegionResponseBO> actuaclList = actual
+                                                        .getGameCharacterRegionResponseBOList();
+                                        List<GameCharacterRegionResponseBO> expectedList = expectedGenshinImpactResponseBO
+                                                        .getGameCharacterRegionResponseBOList();
                                         for (int i = 0; i < expectedList.size(); ++i) {
                                                 assertEquals(actuaclList.get(i).getRegion(),
                                                                 expectedList.get(i).getRegion());
