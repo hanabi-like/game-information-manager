@@ -82,7 +82,7 @@ public class GameCharacterServiceTest {
                                         Collections.shuffle(input);
                                         when(this.gameCharacterRepository.findAll(gameName)).thenReturn(input);
                                         GameCharacterResponseBO actual = gameCharacterService
-                                                        .displaySpecificGameCharacter(gameName);
+                                                        .getSpecificGameCharacter(gameName);
                                         assertEquals(actual.getGameName(),
                                                         expectedGenshinImpactResponseBO.getGameName());
                                         /*

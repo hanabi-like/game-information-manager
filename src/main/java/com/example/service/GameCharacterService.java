@@ -89,14 +89,19 @@ public class GameCharacterService {
         return;
     }
 
-    public GameCharacterResponseBO displaySpecificGameCharacter(String gameName) {
+    public GameCharacterResponseBO getSpecificGameCharacter(String gameName) {
         List<GameCharacter> gameCharacterListFromRepo = gameCharacterRepository.findAll(gameName);
         List<GameCharacter> gameCharacterList = gameCharacterDomain.sortSpecificGameCharacter(gameName,
                 gameCharacterListFromRepo);
         return toResponseBO(gameName, gameCharacterList);
     }
 
-    public GameCharacterRegionResponseBO displaySpecificGameCharacterByRegion(String gameName, String region) {
+    List<String> getSpecificGameRegion(String gameName) {
+        List<GameCharacter> gameCharacterListFromRepo = gameCharacterRepository.findAll(gameName);
+        return gameCharacterDomain.getGameRegion(gameCharacterListFromRepo);
+    }
+
+    public GameCharacterRegionResponseBO getSpecificGameCharacterByRegion(String gameName, String region) {
         List<GameCharacter> gameCharacterListFromRepo = gameCharacterRepository.findAll(gameName);
         List<GameCharacter> gameCharacterList = gameCharacterDomain.sortSpecificGameCharacterByRegion(region,
                 gameCharacterListFromRepo);
