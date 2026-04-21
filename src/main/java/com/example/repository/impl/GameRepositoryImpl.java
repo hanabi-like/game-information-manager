@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.example.repository.GameRepository;
@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class GameRepositoryImpl implements GameRepository {
     private static final String KEY_PREFIX = "game";
 
-    private final RedisTemplate<String, String> redisTemplate;
+    private final StringRedisTemplate redisTemplate;
 
     @Override
     public boolean existGame(String gameName) {
