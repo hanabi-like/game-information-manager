@@ -1,6 +1,7 @@
 package com.example.config;
 
 import com.example.repository.entity.GameCharacterEntity;
+import com.example.repository.entity.UserEntity;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,17 @@ public class RedisConfig {
     public RedisTemplate<String, GameCharacterEntity> gameCharacterRedisTemplate(
             RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, GameCharacterEntity> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.afterPropertiesSet();
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<String, UserEntity> userRedisTemplate(
+            RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, UserEntity> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
