@@ -39,14 +39,14 @@ public class UserRepositoryImpl implements UserRepository {
     private UserEntity toEntity(User user) {
         return UserEntity.builder()
                 .username(user.getUsername())
-                .password(user.getPassword())
+                .passwordHash(user.getPasswordHash())
                 .build();
     }
 
     private User toDomain(UserEntity entity) {
         return User.builder()
                 .username(entity.getUsername())
-                .password(entity.getPassword())
+                .passwordHash(entity.getPasswordHash())
                 .build();
     }
 }

@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserEntity {
     private String username;
-    private String password;
+    private String passwordHash;
 }
