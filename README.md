@@ -29,6 +29,7 @@ Reference
 
 ```
 controller/
+dto/
 service/
     -bo/
 domain/
@@ -37,7 +38,6 @@ domain/
 repository/
     -entity/
     -impl/
-dto/
 ```
 
 ## log
