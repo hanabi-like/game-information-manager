@@ -53,6 +53,7 @@ public class GameCharacterRepositoryTest {
     @Autowired
     private GameCharacterRepository gameCharacterRepository;
 
+    private String username = "user";
     private String inputGameName = "Genshin Impact";
     private List<GameCharacter> input;
 
@@ -65,7 +66,7 @@ public class GameCharacterRepositoryTest {
                 GameCharacter.builder().order(1).name("d").sex(1).region("region3").quality(4).build(),
                 GameCharacter.builder().order(0).name("e").sex(0).region("region4").quality(5).build());
         for (int i = 0; i < input.size(); ++i) {
-            gameCharacterRepository.save(inputGameName, input.get(i));
+            gameCharacterRepository.save(username, inputGameName, input.get(i));
         }
     }
 
@@ -73,13 +74,13 @@ public class GameCharacterRepositoryTest {
     void cleanup() {
         for (int i = 0; i < input.size(); ++i) {
             String name = input.get(i).getName();
-            gameCharacterRepository.delete(inputGameName, name);
+            gameCharacterRepository.delete(username, inputGameName, name);
         }
     }
 
     @Test
     public void shouldAsExpectationWhenExecuteCRUD() {
-        List<GameCharacter> gameCharacterList = gameCharacterRepository.findAll(inputGameName);
+        List<GameCharacter> gameCharacterList = gameCharacterRepository.findAll(username, inputGameName);
         for (int i = 0; i < gameCharacterList.size(); ++i) {
             Integer order = gameCharacterList.get(i).getOrder();
             String name = gameCharacterList.get(i).getName();
@@ -90,7 +91,7 @@ public class GameCharacterRepositoryTest {
                     + region + " quality: " + quality);
         }
         for (GameCharacter i : input) {
-            GameCharacter gameCharacter = gameCharacterRepository.find(inputGameName, i.getName()).get();
+            GameCharacter gameCharacter = gameCharacterRepository.find(username, inputGameName, i.getName()).get();
             assertEquals(i.getOrder(), gameCharacter.getOrder());
             assertEquals(i.getName(), gameCharacter.getName());
             assertEquals(i.getSex(), gameCharacter.getSex());

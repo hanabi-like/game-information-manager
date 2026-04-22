@@ -23,6 +23,7 @@ import java.util.Collections;
 @ExtendWith(MockitoExtension.class)
 public class GameCharacterServiceTest {
 
+        private String username = "user";
         private List<String> gameNameList = Arrays.asList("Genshin Impact");
         private List<GameCharacter> expectedGenshinImpactGameCharacterList = Arrays.asList(
                         GameCharacter.builder().order(0).name("荧").sex(0).region("Genshin").quality(5).build(),
@@ -80,9 +81,9 @@ public class GameCharacterServiceTest {
                                         List<GameCharacter> input = new ArrayList<>(
                                                         expectedGenshinImpactGameCharacterList);
                                         Collections.shuffle(input);
-                                        when(this.gameCharacterRepository.findAll(gameName)).thenReturn(input);
+                                        when(this.gameCharacterRepository.findAll(username, gameName)).thenReturn(input);
                                         GameCharacterResponseBO actual = gameCharacterService
-                                                        .getSpecificGameCharacter(gameName);
+                                                        .getSpecificGameCharacter(username, gameName);
                                         assertEquals(actual.getGameName(),
                                                         expectedGenshinImpactResponseBO.getGameName());
                                         /*

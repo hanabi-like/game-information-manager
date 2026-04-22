@@ -22,87 +22,88 @@ public class GameCharacterService {
     private final GameCharacterRepository gameCharacterRepository;
     private final GameCharacterDomain gameCharacterDomain = new GameCharacterDomain();
 
-    public void saveGameCharacter(String gameName, GameCharacterRequestBO gameCharacterRequestBO) {
+    public void saveGameCharacter(String username, String gameName, GameCharacterRequestBO gameCharacterRequestBO) {
         GameCharacter gameCharacter = toDomain(gameCharacterRequestBO);
-        if (!gameRepository.existGame(gameName)) {
-            gameRepository.saveGame(gameName);
-            gameCharacterRepository.save(gameName, gameCharacter);
+        if (!gameRepository.existGame(username, gameName)) {
+            gameRepository.saveGame(username, gameName);
+            gameCharacterRepository.save(username, gameName, gameCharacter);
             return;
-        } else if (!gameCharacterRepository.exist(gameName, gameCharacter.getName())) {
-            gameCharacterRepository.save(gameName, gameCharacter);
+        } else if (!gameCharacterRepository.exist(username, gameName, gameCharacter.getName())) {
+            gameCharacterRepository.save(username, gameName, gameCharacter);
             return;
         }
         System.out.println("exist");
         return;
     }
 
-    public void updateGame(String oldGameName, String newGameName) {
-        if (!gameRepository.existGame(oldGameName)) {
+    public void updateGame(String username, String oldGameName, String newGameName) {
+        if (!gameRepository.existGame(username, oldGameName)) {
             System.out.println("not exist");
             return;
         }
-        List<GameCharacter> gameCharacterList = gameCharacterRepository.findAll(oldGameName);
+        List<GameCharacter> gameCharacterList = gameCharacterRepository.findAll(username, oldGameName);
         for (var c : gameCharacterList) {
-            gameCharacterRepository.delete(oldGameName, c.getName());
+            gameCharacterRepository.delete(username, oldGameName, c.getName());
         }
-        gameRepository.updateGame(oldGameName, newGameName);
+        gameRepository.updateGame(username, oldGameName, newGameName);
         for (var c : gameCharacterList) {
-            gameCharacterRepository.save(newGameName, c);
+            gameCharacterRepository.save(username, newGameName, c);
         }
         return;
     }
 
-    public void updateGameCharacter(String gameName, GameCharacterRequestBO oldGameCharacterRequestBO,
+    public void updateGameCharacter(String username, String gameName, GameCharacterRequestBO oldGameCharacterRequestBO,
             GameCharacterRequestBO newGameCharacterRequestBO) {
         GameCharacter oldGameCharacter = toDomain(oldGameCharacterRequestBO);
         GameCharacter newGameCharacter = toDomain(newGameCharacterRequestBO);
-        if (!gameRepository.existGame(gameName)
-                || !gameCharacterRepository.exist(gameName, oldGameCharacter.getName())) {
+        if (!gameRepository.existGame(username, gameName)
+                || !gameCharacterRepository.exist(username, gameName, oldGameCharacter.getName())) {
             System.out.println("not exist");
             return;
         }
-        gameCharacterRepository.update(gameName, newGameCharacter);
+        gameCharacterRepository.update(username, gameName, newGameCharacter);
         return;
     }
 
-    public void deleteGame(String gameName) {
-        if (!gameRepository.existGame(gameName)) {
+    public void deleteGame(String username, String gameName) {
+        if (!gameRepository.existGame(username, gameName)) {
             System.out.println("not exist");
             return;
         }
-        List<GameCharacter> gameCharacterList = gameCharacterRepository.findAll(gameName);
+        List<GameCharacter> gameCharacterList = gameCharacterRepository.findAll(username, gameName);
         for (var c : gameCharacterList) {
-            gameCharacterRepository.delete(gameName, c.getName());
+            gameCharacterRepository.delete(username, gameName, c.getName());
         }
-        gameRepository.deleteGame(gameName);
+        gameRepository.deleteGame(username, gameName);
         return;
     }
 
-    public void deleteGameCharacter(String gameName, GameCharacterRequestBO gameCharacterRequestBO) {
+    public void deleteGameCharacter(String username, String gameName, GameCharacterRequestBO gameCharacterRequestBO) {
         GameCharacter gameCharacter = toDomain(gameCharacterRequestBO);
-        if (!gameRepository.existGame(gameName)
-                || !gameCharacterRepository.exist(gameName, gameCharacter.getName())) {
+        if (!gameRepository.existGame(username, gameName)
+                || !gameCharacterRepository.exist(username, gameName, gameCharacter.getName())) {
             System.out.println("not exist");
             return;
         }
-        gameCharacterRepository.delete(gameName, gameCharacter.getName());
+        gameCharacterRepository.delete(username, gameName, gameCharacter.getName());
         return;
     }
 
-    public GameCharacterResponseBO getSpecificGameCharacter(String gameName) {
-        List<GameCharacter> gameCharacterListFromRepo = gameCharacterRepository.findAll(gameName);
+    public GameCharacterResponseBO getSpecificGameCharacter(String username, String gameName) {
+        List<GameCharacter> gameCharacterListFromRepo = gameCharacterRepository.findAll(username, gameName);
         List<GameCharacter> gameCharacterList = gameCharacterDomain.sortSpecificGameCharacter(gameName,
                 gameCharacterListFromRepo);
         return toResponseBO(gameName, gameCharacterList);
     }
 
-    List<String> getSpecificGameRegion(String gameName) {
-        List<GameCharacter> gameCharacterListFromRepo = gameCharacterRepository.findAll(gameName);
+    List<String> getSpecificGameRegion(String username, String gameName) {
+        List<GameCharacter> gameCharacterListFromRepo = gameCharacterRepository.findAll(username, gameName);
         return gameCharacterDomain.getGameRegion(gameCharacterListFromRepo);
     }
 
-    public GameCharacterRegionResponseBO getSpecificGameCharacterByRegion(String gameName, String region) {
-        List<GameCharacter> gameCharacterListFromRepo = gameCharacterRepository.findAll(gameName);
+    public GameCharacterRegionResponseBO getSpecificGameCharacterByRegion(String username, String gameName,
+            String region) {
+        List<GameCharacter> gameCharacterListFromRepo = gameCharacterRepository.findAll(username, gameName);
         List<GameCharacter> gameCharacterList = gameCharacterDomain.sortSpecificGameCharacterByRegion(region,
                 gameCharacterListFromRepo);
         return toRegionResponseBO(gameName, region, gameCharacterList);

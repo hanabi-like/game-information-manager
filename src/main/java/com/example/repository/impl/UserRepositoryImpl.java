@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.example.domain.model.User;
 import com.example.repository.UserRepository;
 import com.example.repository.entity.UserEntity;
+import com.example.repository.util.RedisKey;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,24 +16,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
 
-    private static final String KEY_PREFIX = "auth:user:";
-
     private final RedisTemplate<String, UserEntity> redisTemplate;
 
     @Override
     public boolean exist(String username) {
-        return Boolean.TRUE.equals(redisTemplate.hasKey(KEY_PREFIX + username));
+        return Boolean.TRUE.equals(redisTemplate.hasKey(RedisKey.userKey(username)));
     }
 
     @Override
     public void save(User user) {
         UserEntity entity = toEntity(user);
-        redisTemplate.opsForValue().set(KEY_PREFIX + entity.getUsername(), entity);
+        redisTemplate.opsForValue().set(RedisKey.userKey(entity.getUsername()), entity);
     }
 
     @Override
     public Optional<User> find(String username) {
-        UserEntity entity = redisTemplate.opsForValue().get(KEY_PREFIX + username);
+        UserEntity entity = redisTemplate.opsForValue().get(RedisKey.userKey(username));
         return Optional.ofNullable(entity).map(this::toDomain);
     }
 
