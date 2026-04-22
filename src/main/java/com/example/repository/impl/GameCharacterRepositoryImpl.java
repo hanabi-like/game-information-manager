@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import com.example.repository.GameCharacterRepository;
 import com.example.domain.model.GameCharacter;
 import com.example.repository.entity.GameCharacterEntity;
+import com.example.repository.util.RedisKey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,24 +21,24 @@ public class GameCharacterRepositoryImpl implements GameCharacterRepository {
     private final RedisTemplate<String, GameCharacterEntity> redisTemplate;
 
     @Override
-    public boolean exist(String gameName, String name) {
-        String KEY_PREFIX = gameName + ":";
-        return Boolean.TRUE.equals(redisTemplate.hasKey(KEY_PREFIX + name));
+    public boolean exist(String username, String gameName, String name) {
+        return Boolean.TRUE.equals(redisTemplate.hasKey(RedisKey.gameCharacterKey(username, gameName, name)));
     }
 
     @Override
-    public void save(String gameName, GameCharacter gameCharacter) {
-        String KEY_PREFIX = gameName + ":";
+    public void save(String username, String gameName, GameCharacter gameCharacter) {
         GameCharacterEntity gameCharacterEntity = toEntity(gameCharacter);
-        redisTemplate.opsForValue().set(KEY_PREFIX + gameCharacterEntity.getName(), gameCharacterEntity);
+        redisTemplate.opsForValue().set(
+                RedisKey.gameCharacterKey(username, gameName, gameCharacterEntity.getName()),
+                gameCharacterEntity);
     }
 
     @Override
-    public List<GameCharacter> findAll(String gameName) {
-        String KEY_PREFIX = gameName + ":";
+    public List<GameCharacter> findAll(String username, String gameName) {
         List<GameCharacter> result = new ArrayList<>();
 
-        ScanOptions options = ScanOptions.scanOptions().match(KEY_PREFIX + "*").count(1000).build();
+        ScanOptions options = ScanOptions.scanOptions().match(RedisKey.gameCharacterPattern(username, gameName))
+                .count(1000).build();
 
         try (var cursor = redisTemplate.getConnectionFactory().getConnection().scan(options)) {
             while (cursor.hasNext()) {
@@ -56,21 +57,19 @@ public class GameCharacterRepositoryImpl implements GameCharacterRepository {
     }
 
     @Override
-    public Optional<GameCharacter> find(String gameName, String name) {
-        String KEY_PREFIX = gameName + ":";
-        GameCharacterEntity obj = redisTemplate.opsForValue().get(KEY_PREFIX + name);
-        return Optional.ofNullable(toDomain(obj));
+    public Optional<GameCharacter> find(String username, String gameName, String name) {
+        GameCharacterEntity obj = redisTemplate.opsForValue().get(RedisKey.gameCharacterKey(username, gameName, name));
+        return Optional.ofNullable(obj).map(this::toDomain);
     }
 
     @Override
-    public void delete(String gameName, String name) {
-        String KEY_PREFIX = gameName + ":";
-        redisTemplate.delete(KEY_PREFIX + name);
+    public void delete(String username, String gameName, String name) {
+        redisTemplate.delete(RedisKey.gameCharacterKey(username, gameName, name));
     }
 
     @Override
-    public void update(String gameName, GameCharacter gameCharacter) {
-        save(gameName, gameCharacter);
+    public void update(String username, String gameName, GameCharacter gameCharacter) {
+        save(username, gameName, gameCharacter);
     }
 
     private GameCharacterEntity toEntity(GameCharacter gameCharacter) {

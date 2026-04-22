@@ -5,15 +5,15 @@ import java.util.Optional;
 import com.example.domain.model.GameCharacter;
 
 public interface GameCharacterRepository {
-    boolean exist(String gameName, String name);
+    boolean exist(String username, String gameName, String name);
 
-    void save(String gameName, GameCharacter gameCharacter);
+    void save(String username, String gameName, GameCharacter gameCharacter);
 
-    List<GameCharacter> findAll(String gameName);
+    List<GameCharacter> findAll(String username, String gameName);
 
-    Optional<GameCharacter> find(String gameName, String name);
+    Optional<GameCharacter> find(String username, String gameName, String name);
 
-    void delete(String gameName, String name);
+    void delete(String username, String gameName, String name);
 
-    void update(String gameName, GameCharacter gameCharacter);
+    void update(String username, String gameName, GameCharacter gameCharacter);
 }
