@@ -1,5 +1,6 @@
 package com.example.service;
 
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,17 +24,30 @@ public class GameCharacterService {
     private final GameCharacterDomain gameCharacterDomain = new GameCharacterDomain();
 
     public void saveGameCharacter(String username, String gameName, GameCharacterRequestBO gameCharacterRequestBO) {
-        GameCharacter gameCharacter = toDomain(gameCharacterRequestBO);
-        if (!gameRepository.existGame(username, gameName)) {
+        if (!gameRepository.existGame(username, gameName))
             gameRepository.saveGame(username, gameName);
-            gameCharacterRepository.save(username, gameName, gameCharacter);
-            return;
-        } else if (!gameCharacterRepository.exist(username, gameName, gameCharacter.getName())) {
-            gameCharacterRepository.save(username, gameName, gameCharacter);
+
+        if (gameCharacterRepository.exist(username, gameName, gameCharacterRequestBO.getName())) {
+            System.out.println("exist");
             return;
         }
-        System.out.println("exist");
-        return;
+
+        List<GameCharacter> gameCharacterByRegionList = gameCharacterRepository.findAll(username, gameName)
+                .stream()
+                .filter(c -> c.getRegion().equals(gameCharacterRequestBO.getRegion()))
+                .sorted(Comparator.comparingInt(GameCharacter::getOrder))
+                .toList();
+
+        Integer newOrder = resolveNewOrder(gameCharacterByRegionList, gameCharacterRequestBO);
+
+        for (GameCharacter gc : gameCharacterByRegionList) {
+            if (gc.getOrder() >= newOrder) {
+                gameCharacterRepository.save(username, gameName, rebuildWithNewOrder(gc, gc.getOrder() + 1));
+            }
+        }
+
+        GameCharacter newGameCharacter = toDomain(gameCharacterRequestBO, newOrder);
+        gameCharacterRepository.save(username, gameName, newGameCharacter);
     }
 
     public void updateGame(String username, String oldGameName, String newGameName) {
@@ -52,19 +66,6 @@ public class GameCharacterService {
         return;
     }
 
-    public void updateGameCharacter(String username, String gameName, GameCharacterRequestBO oldGameCharacterRequestBO,
-            GameCharacterRequestBO newGameCharacterRequestBO) {
-        GameCharacter oldGameCharacter = toDomain(oldGameCharacterRequestBO);
-        GameCharacter newGameCharacter = toDomain(newGameCharacterRequestBO);
-        if (!gameRepository.existGame(username, gameName)
-                || !gameCharacterRepository.exist(username, gameName, oldGameCharacter.getName())) {
-            System.out.println("not exist");
-            return;
-        }
-        gameCharacterRepository.update(username, gameName, newGameCharacter);
-        return;
-    }
-
     public void deleteGame(String username, String gameName) {
         if (!gameRepository.existGame(username, gameName)) {
             System.out.println("not exist");
@@ -79,13 +80,12 @@ public class GameCharacterService {
     }
 
     public void deleteGameCharacter(String username, String gameName, GameCharacterRequestBO gameCharacterRequestBO) {
-        GameCharacter gameCharacter = toDomain(gameCharacterRequestBO);
         if (!gameRepository.existGame(username, gameName)
-                || !gameCharacterRepository.exist(username, gameName, gameCharacter.getName())) {
+                || !gameCharacterRepository.exist(username, gameName, gameCharacterRequestBO.getName())) {
             System.out.println("not exist");
             return;
         }
-        gameCharacterRepository.delete(username, gameName, gameCharacter.getName());
+        gameCharacterRepository.delete(username, gameName, gameCharacterRequestBO.getName());
         return;
     }
 
@@ -109,9 +109,12 @@ public class GameCharacterService {
         return toRegionResponseBO(gameName, region, gameCharacterList);
     }
 
-    private GameCharacter toDomain(GameCharacterRequestBO gameCharacterRequestBO) {
-        return GameCharacter.builder().order(gameCharacterRequestBO.getOrder()).name(gameCharacterRequestBO.getName())
-                .sex(gameCharacterRequestBO.getSex()).region(gameCharacterRequestBO.getRegion())
+    private GameCharacter toDomain(GameCharacterRequestBO gameCharacterRequestBO, Integer order) {
+        return GameCharacter.builder()
+                .order(order)
+                .name(gameCharacterRequestBO.getName())
+                .sex(gameCharacterRequestBO.getSex())
+                .region(gameCharacterRequestBO.getRegion())
                 .quality(gameCharacterRequestBO.getQuality())
                 .build();
     }
@@ -136,6 +139,43 @@ public class GameCharacterService {
         return GameCharacterRegionResponseBO.builder()
                 .region(region)
                 .nameList(nameList)
+                .build();
+    }
+
+    private Integer resolveNewOrder(List<GameCharacter> gameCharacterByRegionList,
+            GameCharacterRequestBO gameCharacterRequestBO) {
+        if (gameCharacterByRegionList.isEmpty()) {
+            return 0;
+        }
+
+        GameCharacter refGameCharacter = gameCharacterByRegionList
+                .stream()
+                .filter(c -> c.getName().equals(gameCharacterRequestBO.getRefName()))
+                .findFirst()
+                .orElse(null);
+
+        if (refGameCharacter == null) {
+            System.out.println("not exist");
+            return gameCharacterByRegionList.size();
+        }
+
+        if ("BEFORE".equals(gameCharacterRequestBO.getInsertPos()))
+            return refGameCharacter.getOrder();
+
+        if ("AFTER".equals(gameCharacterRequestBO.getInsertPos()))
+            return refGameCharacter.getOrder() + 1;
+
+        System.out.println("invalid insert position");
+        return gameCharacterByRegionList.size();
+    }
+
+    private GameCharacter rebuildWithNewOrder(GameCharacter gameCharacter, Integer newOrder) {
+        return GameCharacter.builder()
+                .order(newOrder)
+                .name(gameCharacter.getName())
+                .sex(gameCharacter.getSex())
+                .region(gameCharacter.getRegion())
+                .quality(gameCharacter.getQuality())
                 .build();
     }
 }

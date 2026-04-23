@@ -43,11 +43,25 @@ public class GameCharacterController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @GetMapping("/region/{region}")
+    public ResponseEntity<GameCharacterRegionResponseDTO> getGameCharacterByRegion(
+            @RequestHeader("X-User-Name") String username,
+            @PathVariable String gameName,
+            @PathVariable String region) {
+        GameCharacterRegionResponseBO responseBO = gameCharacterService.getSpecificGameCharacterByRegion(username,
+                gameName, region);
+        return ResponseEntity.ok(toRegionResponseDTO(responseBO));
+    }
+
     private GameCharacterRequestBO toRequestBO(GameCharacterRequestDTO gameCharacterRequestDTO) {
         return GameCharacterRequestBO.builder()
-                .order(gameCharacterRequestDTO.getOrder()).name(gameCharacterRequestDTO.getName())
-                .sex(gameCharacterRequestDTO.getSex()).region(gameCharacterRequestDTO.getRegion())
-                .quality(gameCharacterRequestDTO.getQuality()).build();
+                .name(gameCharacterRequestDTO.getName())
+                .sex(gameCharacterRequestDTO.getSex())
+                .region(gameCharacterRequestDTO.getRegion())
+                .quality(gameCharacterRequestDTO.getQuality())
+                .refName(gameCharacterRequestDTO.getRefName())
+                .insertPos(gameCharacterRequestDTO.getInsertPos())
+                .build();
     }
 
     private GameCharacterResponseDTO toResponseDTO(GameCharacterResponseBO gameCharacterResponseBO) {

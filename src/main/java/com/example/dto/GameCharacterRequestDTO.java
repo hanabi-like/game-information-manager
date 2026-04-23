@@ -10,9 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class GameCharacterRequestDTO {
-    private Integer order;
     private String name;
     private Integer sex;
     private String region;
     private Integer quality;
+    private String refName;
+    private String insertPos;
 }
