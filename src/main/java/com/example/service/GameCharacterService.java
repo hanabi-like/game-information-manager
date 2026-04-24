@@ -93,6 +93,11 @@ public class GameCharacterService {
         List<GameCharacter> gameCharacterListFromRepo = gameCharacterRepository.findAll(username, gameName);
         List<GameCharacter> gameCharacterList = gameCharacterDomain.sortSpecificGameCharacter(gameName,
                 gameCharacterListFromRepo);
+
+        System.out.println("getSpecificGameCharacter()");
+        System.out.println(gameName);
+        gameCharacterList.forEach(System.out::println);
+
         return toResponseBO(gameName, gameCharacterList);
     }
 
@@ -106,6 +111,12 @@ public class GameCharacterService {
         List<GameCharacter> gameCharacterListFromRepo = gameCharacterRepository.findAll(username, gameName);
         List<GameCharacter> gameCharacterList = gameCharacterDomain.sortSpecificGameCharacterByRegion(region,
                 gameCharacterListFromRepo);
+
+        System.out.println("getSpecificGameCharacterByRegion()");
+        System.out.println(gameName);
+        System.out.println(region);
+        gameCharacterList.forEach(System.out::println);
+
         return toRegionResponseBO(gameName, region, gameCharacterList);
     }
 
